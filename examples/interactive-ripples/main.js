@@ -8,6 +8,16 @@ import * as THREE from "three";
 // [OSS Edition] 절대경로(/examples/...)는 GitHub Pages의 /<저장소명>/ 하위 경로에서 404 → 상대경로로 변경
 import { getAssetFileURL } from "../js/get-asset-url.js";
 
+// ===== [OSS Edition] 여기 숫자만 바꿔도 효과가 달라집니다 =====
+const RIPPLE_COLOR = [1.0, 0.3, 0.9]; // 물결 빛 색 (R, G, B: 0~1) — 네온 핑크, 원본은 흰빛
+const RIPPLE_SPEED = 3.0; // 물결이 퍼지는 속도 (원본 4.0)
+const RIPPLE_WAVELENGTH = 8.0; // 클수록 물결 간격이 촘촘 (원본 5.0)
+const RIPPLE_GLOW = 20.0; // 물결 꼭대기 밝기 (원본 10.0)
+// 장면 선택: 주소 뒤에 ?scene=fireplace.spz 처럼 붙이면 다른 3D 스캔으로 바뀜 (목록: ../assets.json)
+const SCENE = new URLSearchParams(location.search).get("scene") || "valley.spz";
+const glsl = (n) => n.toFixed(3); // JS 숫자 → GLSL float 문자열
+// ============================================================
+
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -60,15 +70,16 @@ function passthroughDyno(timeUniform, hitpointUniform) {
            vec3 shockwave(vec3 center, float t, vec3 hitpoint) {
              vec3 direction = center - hitpoint;
              float distance = length(direction);
-             center += normalize(direction)*sin(t*4.-distance*5.)*exp(-t)*smoothstep(t*2.,0.,distance)*.5;
+             center += normalize(direction)*sin(t*${glsl(RIPPLE_SPEED)}-distance*${glsl(RIPPLE_WAVELENGTH)})*exp(-t)*smoothstep(t*2.,0.,distance)*.5;
              return center;
            }
            vec4 shockwaveColor(vec4 rgba, vec3 center, float t, vec3 hitpoint) {
              vec3 direction = center - hitpoint;
              float distance = length(direction);
-             float wave = sin(t*4.-distance*5.)*exp(-t*.7)*smoothstep(t*2.,0.,distance);
-             float brightness = pow(abs(wave),3.) * 10.; // Increase brightness on wave crests
-             rgba.rgb += brightness;
+             float wave = sin(t*${glsl(RIPPLE_SPEED)}-distance*${glsl(RIPPLE_WAVELENGTH)})*exp(-t*.7)*smoothstep(t*2.,0.,distance);
+             float brightness = pow(abs(wave),3.) * ${glsl(RIPPLE_GLOW)}; // Increase brightness on wave crests
+             // [OSS Edition] 흰빛 대신 RIPPLE_COLOR 색으로 빛나게
+             rgba.rgb += brightness * vec3(${RIPPLE_COLOR.map(glsl).join(", ")});
              return rgba;
            }
         `),
@@ -98,8 +109,8 @@ async function run() {
   const timeUniform = dyno.dynoFloat(0.0);
   const hitpointUniform = dyno.dynoVec3(new THREE.Vector3(0, 0, 1000)); // Initialize far away to avoid initial effect
 
-  // Load valley.spz
-  const splatURL = await getAssetFileURL("valley.spz");
+  // Load scene (default: valley.spz)
+  const splatURL = await getAssetFileURL(SCENE);
   const valley = new SplatMesh({ url: splatURL });
   await valley.initialized;
 
