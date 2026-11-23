@@ -9,12 +9,15 @@ import * as THREE from "three";
 import { getAssetFileURL } from "../js/get-asset-url.js";
 
 // ===== [OSS Edition] 여기 숫자만 바꿔도 효과가 달라집니다 =====
-const RIPPLE_COLOR = [1.0, 0.3, 0.9]; // 물결 빛 색 (R, G, B: 0~1) — 네온 핑크, 원본은 흰빛
-const RIPPLE_SPEED = 3.0; // 물결이 퍼지는 속도 (원본 4.0)
-const RIPPLE_WAVELENGTH = 8.0; // 클수록 물결 간격이 촘촘 (원본 5.0)
-const RIPPLE_GLOW = 20.0; // 물결 꼭대기 밝기 (원본 10.0)
+const params = new URLSearchParams(location.search);
+// ?preset=original 을 붙이면 원본 예제의 효과 값으로 실행 (수정 전후 비교용)
+const ORIGINAL = params.get("preset") === "original";
+const RIPPLE_COLOR = ORIGINAL ? [1.0, 1.0, 1.0] : [1.0, 0.3, 0.9]; // 물결 빛 색 (R, G, B: 0~1) — 네온 핑크, 원본은 흰빛
+const RIPPLE_SPEED = ORIGINAL ? 4.0 : 3.0; // 물결이 퍼지는 속도 (원본 4.0)
+const RIPPLE_WAVELENGTH = ORIGINAL ? 5.0 : 8.0; // 클수록 물결 간격이 촘촘 (원본 5.0)
+const RIPPLE_GLOW = ORIGINAL ? 10.0 : 20.0; // 물결 꼭대기 밝기 (원본 10.0)
 // 장면 선택: 주소 뒤에 ?scene=fireplace.spz 처럼 붙이면 다른 3D 스캔으로 바뀜 (목록: ../assets.json)
-const SCENE = new URLSearchParams(location.search).get("scene") || "valley.spz";
+const SCENE = params.get("scene") || "valley.spz";
 const glsl = (n) => n.toFixed(3); // JS 숫자 → GLSL float 문자열
 // ============================================================
 
