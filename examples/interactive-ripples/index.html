@@ -25,6 +25,17 @@
   <body>
     <canvas id="canvas"></canvas>
     <div class="legend">Click to generate ripples • WASD + Mouse to move camera</div>
+    <!-- [OSS Edition] 빌드 없이(GitHub Pages) 동작하도록 import map 추가:
+         three.js는 CDN, Spark는 저장소에 커밋된 dist/ 사용 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+          "@sparkjsdev/spark": "../../dist/spark.module.js"
+        }
+      }
+    </script>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

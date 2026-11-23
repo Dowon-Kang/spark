@@ -5,7 +5,8 @@ import {
   dyno,
 } from "@sparkjsdev/spark";
 import * as THREE from "three";
-import { getAssetFileURL } from "/examples/js/get-asset-url.js";
+// [OSS Edition] 절대경로(/examples/...)는 GitHub Pages의 /<저장소명>/ 하위 경로에서 404 → 상대경로로 변경
+import { getAssetFileURL } from "../js/get-asset-url.js";
 
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
