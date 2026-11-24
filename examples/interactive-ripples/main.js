@@ -242,9 +242,13 @@ async function run() {
 
   if (!ORIGINAL) setupPlayground(u);
 
+  let lastMs = null;
   renderer.setAnimationLoop((timeMs) => {
     // Increment time counter each frame
-    timeCounter += 0.016; // ~60fps increment
+    // [OSS Edition] 원본은 프레임당 0.016초 고정이라 느린 PC에서 효과도 느려짐 → 실제 경과 시간 사용(원본 모드는 그대로)
+    const dt = ORIGINAL || lastMs === null ? 0.016 : Math.min((timeMs - lastMs) / 1000, 0.1);
+    lastMs = timeMs;
+    timeCounter += dt;
     timeUniform.value = timeCounter;
 
     // Update dyno uniforms to propagate to the mesh each frame
