@@ -20,12 +20,27 @@
       pointer-events: none;
       z-index: 100;
     }
+    /* [OSS Edition] 놀이터 모드 HUD */
+    #hud {
+      position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+      color: #fff; font-family: Arial, sans-serif; text-align: center;
+      background: rgba(10, 10, 20, 0.55); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px;
+      padding: 10px 18px; pointer-events: none; z-index: 100;
+    }
+    #hud:empty { display: none; }
+    #hud .mode { font-size: 22px; font-weight: bold; }
+    #hud .keys span { display: inline-block; margin: 6px 4px 2px; padding: 2px 8px; border-radius: 8px; font-size: 13px; opacity: 0.55; }
+    #hud .keys span.on { opacity: 1; background: rgba(255, 80, 220, 0.45); }
+    #hud .stat { font-size: 13px; opacity: 0.85; }
+    #hud .combo { color: #ffd23f; font-size: 16px; }
   </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <div id="hud"></div>
     <div class="legend">
-      <b>OSS개론 Edition</b> · 클릭하면 빛의 물결이 퍼져요 · WASD + 마우스로 이동<br>
+      <b>OSS개론 Edition · 놀이터</b> · 클릭! · 1~4 효과 바꾸기 · Space 랜덤 · 연타하면 콤보 · WASD 이동<br>
       <small>다른 장면: 주소 끝에 <code>?scene=fireplace.spz</code> (벽난로) / <code>?scene=forge.spz</code> (대장간 모루) · 원본 효과와 비교: <code>?preset=original</code></small>
     </div>
     <!-- [OSS Edition] 빌드 없이(GitHub Pages) 동작하도록 import map 추가:
